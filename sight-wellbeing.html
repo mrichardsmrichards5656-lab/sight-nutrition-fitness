@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  SIGHT WELL UK  (working title — rename to whatever you choose)
+  Sister site to Sight Atlas UK. Whole-health for blind and partially
+  sighted people: getting active, eating well, sleep, and stress.
+
+  STRUCTURE: a home page + one page per topic (like Sight Atlas's pages).
+  Tapping a topic button opens that page. Each topic page has the in-depth
+  content plus a few VERIFIED "learn more" links, and a Back button.
+
+  HOW TO EDIT (you don't need to be technical):
+   - Look for lines beginning with  EDIT:  — that's where your words go.
+   - Each topic lives in its own block: <section id="page-active"> etc.
+   - To set a link, replace the address inside href="...".
+   - Leave the <style> and <script> blocks alone unless changing the design.
+  ============================================================================
+-->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sight Well UK — free, accessible whole-health guidance for blind and partially sighted people in the UK. Getting active, eating well, sleep and managing stress.">
+<meta name="theme-color" content="#f5b800">
+<title>Sight Well UK — Whole-Health for Blind &amp; Partially Sighted People</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ════════ DESIGN TOKENS — LIGHT DEFAULT (matches Sight Atlas) ════════ */
+:root{
+  scroll-padding-top: 120px;
+  --bg:#eef3f7; --bg2:#e4ebf1; --card:#ffffff; --card2:#f7f9fb;
+  --yellow:#9c5500; --yellow2:#c47408;
+  --btn-bg:#9c5500; --btn-fg:#ffffff;   /* filled-button bg + its text (always contrasts) */
+  --text:#1a1a2e; --text2:#4a4a6a; --border:rgba(0,0,0,0.50);
+  --green:#1a7a3c; --blue:#1a6fa8; --red:#dc2626;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --font:'Atkinson Hyperlegible', sans-serif;
+  --scale:1;
+}
+body.dark{
+  --bg:#0f1320; --bg2:#161c2e; --card:#1e2640; --card2:#242d4a;
+  --text:#ffffff; --text2:#d6dae8; --border:rgba(255,255,255,0.40);
+  --yellow:#f5b800; --yellow2:#ffc929; --green:#4ade80; --blue:#38bdf8; --red:#f87171;
+  --btn-bg:#f5b800; --btn-fg:#000000;
+  --shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+body.ll{
+  --bg:#2b1f15; --bg2:#3a2a1c; --card:#3d2d20; --card2:#4a3729;
+  --text:#f4e4cc; --text2:#d4b896; --border:rgba(244,228,204,0.48);
+  --yellow:#ffb84d; --yellow2:#ffc466; --green:#7dbf85; --blue:#7eb8d0; --red:#e89090;
+  --btn-bg:#ffb84d; --btn-fg:#000000;
+  --shadow:0 2px 12px rgba(0,0,0,0.4);
+}
+body.hc{
+  --bg:#000; --bg2:#0a0a0a; --card:#0a0a0a; --card2:#141414;
+  --text:#fff; --text2:#ddd; --border:#fff; --yellow:#fff; --yellow2:#ddd; --btn-bg:#ffffff; --btn-fg:#000000; --shadow:none;
+}
+body.yb{
+  --bg:#fcd901; --bg2:#fcd901; --card:#fcd901; --card2:#fcd901;
+  --text:#000; --text2:#1a1a1a; --border:#000; --yellow:#000; --yellow2:#1a1a1a; --btn-bg:#000000; --btn-fg:#fcd901; --shadow:none;
+}
+body.lb{
+  --bg:#cce8f4; --bg2:#bfe0f0; --card:#e6f4fb; --card2:#d6ecf7;
+  --text:#000; --text2:#16204a; --border:#003a80; --yellow:#003a80; --yellow2:#00529b; --btn-bg:#003a80; --btn-fg:#ffffff; --shadow:none;
+}
+
+/* ════════ BASE ════════ */
+html{ font-size:calc(17px * var(--scale)); scroll-behavior:smooth; background:var(--bg); }
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:var(--font); font-weight:400; background:var(--bg); color:var(--text);
+  min-height:100vh; line-height:1.7; overflow-wrap:break-word; }
+h1,h2,h3,p,li,a,span,button{ overflow-wrap:break-word; }
+
+a:focus-visible, button:focus-visible, select:focus-visible, [tabindex]:focus-visible{
+  outline:3px solid var(--yellow); outline-offset:3px; border-radius:4px; }
+body.hc a:focus-visible, body.hc button:focus-visible, body.hc select:focus-visible{
+  outline:4px solid #fff !important; outline-offset:3px; }
+
+.skip{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  background:var(--btn-bg); color:var(--btn-fg); font-weight:800; text-decoration:none; }
+.skip:focus{ position:fixed; top:12px; left:12px; width:auto; height:auto; margin:0;
+  padding:14px 28px; border-radius:50px; clip:auto; overflow:visible; white-space:normal; z-index:9999; }
+.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* ════════ ACCESSIBILITY TOOLBAR ════════ */
+.a11y-bar-outer{ position:sticky; top:0; z-index:200; border-bottom:3px solid var(--yellow); }
+.a11y-bar{ background:var(--bg2); padding:6px 8px; display:flex; align-items:center;
+  justify-content:center; gap:5px; flex-wrap:wrap; row-gap:5px; min-height:50px; }
+.a11y-bar-row2{ padding-top:0; min-height:0; padding-bottom:8px; }
+.a11y-bar-inner{ display:flex; align-items:center; gap:4px; flex-wrap:wrap; justify-content:center; }
+.tb-divider{ width:1px; height:34px; background:var(--border); flex-shrink:0; }
+.tb-btn{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center;
+  background:var(--card2); border:1.5px solid var(--border); border-radius:10px; cursor:pointer;
+  font-family:var(--font); color:var(--text); gap:1px; min-width:42px; min-height:50px;
+  padding:3px 4px; flex-shrink:0; transition:background .15s,border-color .15s; }
+.tb-btn:hover{ background:var(--btn-bg); color:var(--btn-fg); border-color:var(--btn-bg); }
+.tb-btn[aria-pressed="false"]{ background:var(--card2); color:var(--text); border-color:var(--border); }
+.tb-btn[aria-pressed="true"]{ background:var(--btn-bg); color:var(--btn-fg); border-color:var(--btn-bg); }
+.tb-btn[aria-pressed="true"] .tb-icon, .tb-btn[aria-pressed="true"] .tb-label{ color:var(--btn-fg); }
+.tb-btn:hover .tb-icon, .tb-btn:hover .tb-label{ color:var(--btn-fg); }
+.tb-icon{ font-size:16px; line-height:1; font-weight:900; }
+.tb-label{ font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.02em;
+  line-height:1; white-space:nowrap; color:var(--text); }
+.tb-select{ height:50px; border-radius:10px; border:2px solid var(--border); background:var(--card2);
+  color:var(--text); font-family:var(--font); font-size:12px; font-weight:800; padding:0 24px 0 8px;
+  flex-shrink:0; cursor:pointer; width:88px; appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='4 6 8 10 12 6'/%3e%3c/svg%3e");
+  background-repeat:no-repeat; background-position:right 8px center; background-size:14px; }
+.tb-name{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px;
+  background:none; border:none; padding:0; cursor:pointer; flex-shrink:0; }
+
+/* ════════ PAGES ════════ */
+.page{ display:none; }
+.page.active{ display:block; }
+
+/* ════════ HERO (home) ════════ */
+.hero{ padding:36px 20px 28px; max-width:min(680px,100%); margin:0 auto; width:100%; }
+.hero-eyebrow{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--yellow); margin-bottom:14px; display:block; }
+.hero h1{ font-size:clamp(1.5rem,5vw,2.4rem); font-weight:900; line-height:1.15; margin-bottom:14px; color:var(--text); }
+.hero-desc{ font-size:1.05rem; color:var(--text2); margin-bottom:22px; line-height:1.8; }
+.wordmark{ font-size:min(2.2rem,14vw); font-weight:800; color:var(--text); letter-spacing:-0.025em;
+  line-height:1.05; margin-bottom:8px; }
+.wordmark .accent{ color:var(--yellow); font-weight:900; }
+.wordmark .uk{ font-size:min(1rem,5vw); font-weight:700; color:var(--text2); letter-spacing:0.08em; margin-left:6px; vertical-align:middle; }
+.flagline{ display:inline-flex; align-items:center; gap:10px; margin-top:4px; }
+.flagline .bar{ display:inline-block; width:28px; height:3px; border-radius:2px; }
+.flagline .label{ font-size:0.78rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:var(--text2); }
+
+/* Topic navigation buttons on the home page */
+.topic-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px; }
+@media (min-width:520px){ .topic-grid{ grid-template-columns:1fr 1fr; } }
+.topic-btn{ display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+  background:var(--card); border:2px solid var(--border); border-radius:16px; padding:18px 20px;
+  font-family:var(--font); color:var(--text); cursor:pointer; box-shadow:var(--shadow);
+  min-height:64px; transition:border-color .15s,transform .15s; }
+.topic-btn:hover{ border-color:var(--yellow); transform:translateY(-2px); }
+.topic-btn .t-icon{ font-size:1.7rem; line-height:1; flex-shrink:0; }
+.topic-btn .t-text{ display:flex; flex-direction:column; }
+.topic-btn .t-title{ font-weight:900; font-size:1.1rem; color:var(--text); }
+.topic-btn .t-sub{ font-size:0.85rem; color:var(--text2); font-weight:600; }
+.topic-btn .t-arrow{ margin-left:auto; color:var(--yellow); font-weight:900; font-size:1.2rem; }
+
+/* ════════ TOPIC PAGES ════════ */
+.legal-wrap{ max-width:680px; margin:0 auto; padding:28px 20px 40px; }
+.back-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--card); border:2px solid var(--border);
+  color:var(--yellow); padding:10px 24px; border-radius:50px; font-family:var(--font); font-size:0.9rem;
+  font-weight:700; cursor:pointer; min-height:44px; margin-bottom:24px; transition:border-color .15s; }
+.back-btn:hover{ border-color:var(--yellow); }
+.section-eyebrow{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--yellow); margin-bottom:10px; display:block; }
+.legal-wrap h1{ font-size:clamp(1.7rem,6vw,2.4rem); font-weight:900; line-height:1.12; margin-bottom:18px; color:var(--text); outline:none; }
+.lc{ background:var(--card); border:2px solid var(--border); border-radius:16px; padding:22px 24px;
+  margin-bottom:14px; box-shadow:var(--shadow); }
+.lc h2{ font-size:1.1rem; font-weight:800; color:var(--yellow); margin-bottom:10px; }
+.lc p, .lc li{ font-size:0.95rem; color:var(--text2); line-height:1.85; }
+.lc ul{ padding-left:20px; margin-top:8px; }
+.lc li{ margin-bottom:5px; }
+.lc li strong{ color:var(--text); }
+.lc a{ color:var(--yellow); font-weight:700; text-decoration:underline; }
+.lc p + p{ margin-top:10px; }
+.note-card{ background:var(--card2); }
+.learnmore{ border-style:dashed; }
+.learnmore h2::before{ content:"🔗 "; }
+
+/* Per-card "Listen" button (added automatically to each card by the script) */
+.lc-listen{ display:inline-flex; align-items:center; gap:7px; margin-top:16px;
+  background:var(--card2); border:2px solid var(--border); color:var(--yellow);
+  font-family:var(--font); font-weight:800; font-size:0.82rem; padding:8px 16px;
+  border-radius:50px; cursor:pointer; min-height:44px; letter-spacing:0.02em;
+  transition:border-color .15s,background .15s; }
+.lc-listen:hover{ border-color:var(--yellow); }
+.lc-listen[aria-pressed="true"]{ background:var(--btn-bg); color:var(--btn-fg); border-color:var(--btn-bg); }
+.lc-listen .li-icon{ font-size:1rem; line-height:1; }
+
+/* ════════ FOOTER ════════ */
+footer{ background:var(--bg2); border-top:3px solid var(--yellow); padding:36px 20px 28px; margin-top:30px; }
+.footer-inner{ max-width:680px; margin:0 auto; }
+.footer-logo{ font-size:1.1rem; font-weight:900; color:var(--yellow); margin-bottom:10px; }
+.footer-desc{ font-size:0.88rem; color:var(--text2); margin-bottom:22px; line-height:1.8; }
+.footer-links{ display:flex; gap:18px; flex-wrap:wrap; margin-bottom:22px; }
+.footer-links a, .footer-links button{ color:var(--text2); text-decoration:underline; font-size:0.88rem;
+  font-weight:600; min-height:44px; display:inline-flex; align-items:center; background:none; border:none;
+  font-family:var(--font); cursor:pointer; padding:0; }
+.footer-links a:hover, .footer-links button:hover{ color:var(--yellow); }
+.footer-bottom{ font-size:0.78rem; color:var(--text2); border-top:1px solid var(--border); padding-top:18px; line-height:1.8; }
+
+/* ════════ BACK TO TOP ════════ */
+.back-top{ position:fixed; bottom:24px; right:20px; z-index:300; width:56px; height:56px; border-radius:50%;
+  background:var(--btn-bg); color:var(--btn-fg); border:none; font-size:1.4rem; font-weight:900; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,0.28);
+  opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; transform:translateY(8px); }
+.back-top.vis{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top:focus-visible{ outline:3px solid var(--text); outline-offset:3px; }
+
+/* ════════ READING AIDS ════════ */
+body.dyslexic, body.dyslexic *{ letter-spacing:0.03em; word-spacing:0.08em; line-height:1.7 !important; }
+body.wide-spacing, body.wide-spacing *{ letter-spacing:0.06em !important; word-spacing:0.12em !important; line-height:2.1 !important; }
+body.reading-ruler{ cursor:none; }
+.reading-ruler-bar{ position:fixed; left:0; right:0; height:48px; background:rgba(156,85,0,0.15);
+  border-top:2px solid var(--yellow); border-bottom:2px solid var(--yellow); pointer-events:none; z-index:99998; display:none; }
+body.reading-ruler .reading-ruler-bar{ display:block; }
+
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="reading-ruler-bar" aria-hidden="true"></div>
+
+<!-- ════════ ACCESSIBILITY TOOLBAR ════════ -->
+<div class="a11y-bar-outer" role="banner">
+  <!-- Row 1: text size + listen -->
+  <div class="a11y-bar" role="toolbar" aria-label="Text size and listen">
+    <div class="a11y-bar-inner">
+      <div role="group" aria-label="Text size" style="display:flex;gap:3px;align-items:center">
+        <button class="tb-btn" id="sz-s"  onclick="setSize(1)"    aria-pressed="true"  aria-label="Small text"><span class="tb-icon" style="font-size:13px" aria-hidden="true">A</span><span class="tb-label">Small</span></button>
+        <button class="tb-btn" id="sz-m"  onclick="setSize(1.35)" aria-pressed="false" aria-label="Medium text"><span class="tb-icon" aria-hidden="true">A</span><span class="tb-label">Med</span></button>
+        <button class="tb-btn" id="sz-l"  onclick="setSize(1.7)"  aria-pressed="false" aria-label="Large text"><span class="tb-icon" style="font-size:18px" aria-hidden="true">A</span><span class="tb-label">Large</span></button>
+        <button class="tb-btn" id="sz-xl" onclick="setSize(2.2)"  aria-pressed="false" aria-label="Extra large text"><span class="tb-icon" style="font-size:20px" aria-hidden="true">A</span><span class="tb-label">X-Lrg</span></button>
+      </div>
+      <div class="tb-divider"></div>
+      <button class="tb-btn" id="tts-toggle" onclick="togglePageSpeech()" aria-pressed="false" aria-label="Read this page aloud"><span class="tb-icon" aria-hidden="true">🔊</span><span class="tb-label" id="tts-label">Listen</span></button>
+    </div>
+  </div>
+  <!-- Row 2: colour theme + reading aids -->
+  <div class="a11y-bar a11y-bar-row2" role="toolbar" aria-label="Colour theme and reading aids">
+    <div class="a11y-bar-inner">
+      <select id="col-select" onchange="setColour(this.value)" aria-label="Colour theme" class="tb-select" title="Colour theme">
+        <option value="">Light</option>
+        <option value="lb">Blue/Black</option>
+        <option value="dark">Dark</option>
+        <option value="ll">Low Light</option>
+        <option value="hc">Black/White</option>
+        <option value="yb">Yellow/Black</option>
+      </select>
+      <div class="tb-divider"></div>
+      <button class="tb-btn" id="dys-toggle"     onclick="toggleDyslexic()"     aria-pressed="false" aria-label="Toggle dyslexia-friendly spacing"><span class="tb-icon" style="font-size:14px" aria-hidden="true">Aa</span><span class="tb-label">Dyslexic</span></button>
+      <button class="tb-btn" id="spacing-toggle" onclick="toggleSpacing()"      aria-pressed="false" aria-label="Increase line spacing"><span class="tb-icon" style="font-size:13px" aria-hidden="true">&#8801;</span><span class="tb-label">Spacing</span></button>
+      <button class="tb-btn" id="rule-toggle"    onclick="toggleReadingRuler()" aria-pressed="false" aria-label="Toggle reading ruler"><span class="tb-icon" aria-hidden="true">&#9645;</span><span class="tb-label">Ruler</span></button>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ════════════════════════════════════════════════════════════════
+       HOME PAGE
+  ═════════════════════════════════════════════════════════════════ -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div style="text-align:center;margin-bottom:22px">
+        <svg viewBox="0 0 240 140" width="100%" style="max-width:240px;display:inline-block;margin-bottom:10px" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+          <defs><radialGradient id="irisCenter" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--yellow)" stop-opacity="1"/>
+            <stop offset="100%" stop-color="var(--yellow)" stop-opacity="0.5"/>
+          </radialGradient></defs>
+          <circle cx="120" cy="70" r="55" fill="none" stroke="var(--yellow)" stroke-width="1" opacity="0.2"/>
+          <circle cx="120" cy="70" r="48" fill="none" stroke="var(--yellow)" stroke-width="1" opacity="0.3"/>
+          <path d="M40,70 Q80,18 120,18 Q160,18 200,70 Q160,122 120,122 Q80,122 40,70 Z" fill="var(--card)" stroke="var(--yellow)" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="120" cy="70" r="28" fill="url(#irisCenter)"/>
+          <circle cx="120" cy="70" r="13" fill="var(--text)"/>
+          <circle cx="125" cy="65" r="4" fill="#fff"/>
+        </svg>
+        <!-- EDIT: site name -->
+        <div class="wordmark">Sight<span class="accent">Well</span><span class="uk">UK</span></div>
+        <div class="flagline">
+          <span class="bar" style="background:linear-gradient(to right,#c8102e 33%,#fff 33%,#fff 66%,#012169 66%)"></span>
+          <span class="label">A free UK resource</span>
+          <span class="bar" style="background:linear-gradient(to right,#012169 33%,#fff 33%,#fff 66%,#c8102e 66%)"></span>
+        </div>
+      </div>
+
+      <span class="hero-eyebrow">Free &middot; Independent &middot; UK</span>
+      <h1>Your whole health,<br>in one place.</h1>
+      <p class="hero-desc">Clear, accessible guidance on staying active, eating well, sleeping
+        better and looking after your mind — written for people who are blind or partially
+        sighted, and the people who support them.</p>
+
+      <!-- EDIT: your personal introduction — keep it short and in your voice. -->
+      <div class="lc" style="margin-bottom:18px">
+        <h2>👋 Why I built this site</h2>
+        <p>After my daughter was diagnosed with <strong>Stargardt disease</strong>, I found plenty
+          of guidance about the eyes — but very little on staying well in every other way. Health
+          and fitness have always mattered to me, so I built this: free, practical, whole-health
+          guidance for blind and partially sighted people, and a sister site to
+          <strong>Sight Atlas UK</strong>. I'm not a doctor — always check with yours.</p>
+      </div>
+
+      <nav class="topic-grid" aria-label="Health topics">
+        <button class="topic-btn" onclick="showPage('active')">
+          <span class="t-icon" aria-hidden="true">🏃</span>
+          <span class="t-text"><span class="t-title">Getting active</span><span class="t-sub">Exercise &amp; sport with sight loss</span></span>
+          <span class="t-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="topic-btn" onclick="showPage('eating')">
+          <span class="t-icon" aria-hidden="true">🥗</span>
+          <span class="t-text"><span class="t-title">Eating well</span><span class="t-sub">Accessible kitchen &amp; balanced food</span></span>
+          <span class="t-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="topic-btn" onclick="showPage('sleep')">
+          <span class="t-icon" aria-hidden="true">😴</span>
+          <span class="t-text"><span class="t-title">Sleep</span><span class="t-sub">Rest, routine &amp; your body clock</span></span>
+          <span class="t-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="topic-btn" onclick="showPage('stress')">
+          <span class="t-icon" aria-hidden="true">🧠</span>
+          <span class="t-text"><span class="t-title">Stress &amp; mind</span><span class="t-sub">Emotional wellbeing &amp; support</span></span>
+          <span class="t-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="topic-btn" onclick="showPage('help')">
+          <span class="t-icon" aria-hidden="true">📞</span>
+          <span class="t-text"><span class="t-title">Useful organisations</span><span class="t-sub">National support &amp; helplines</span></span>
+          <span class="t-arrow" aria-hidden="true">→</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ════════════════ GETTING ACTIVE ════════════════ -->
+  <section id="page-active" class="page" aria-labelledby="active-h">
+    <div class="legal-wrap">
+      <button class="back-btn" onclick="goHome()"><span aria-hidden="true">←</span> Back to home</button>
+      <span class="section-eyebrow">Move more</span>
+      <h1 id="active-h" tabindex="-1">🏃 Getting active</h1>
+
+      <div class="lc">
+        <h2>Why it's worth it</h2>
+        <p>Being active lifts your mood, helps you sleep, and protects your heart — and sight loss
+          needn't stand in the way. The NHS suggests adults aim for around 150 minutes of moderate
+          activity a week (anything that leaves you a little out of breath), plus strengthening
+          activity on two days. It all counts, and small chunks are fine.</p>
+      </div>
+
+      <div class="lc">
+        <h2>Ways to move</h2>
+        <ul>
+          <li><strong>At home:</strong> chair exercises, marching on the spot, and simple strength
+            moves using tins or bottles are easy to do safely in a familiar space.</li>
+          <li><strong>Walking:</strong> a known, clutter-free route — alone, with a sighted guide,
+            or with a cane or guide dog — is great everyday activity.</li>
+          <li><strong>Guided running:</strong> a sighted guide runs alongside you on a short tether.
+            Many parkruns welcome guide runners.</li>
+          <li><strong>Swimming:</strong> a confident, low-risk environment. Ask the pool about lane
+            ropes and counting lengths.</li>
+          <li><strong>Adaptive sport:</strong> clubs across the UK offer goalball, tandem cycling,
+            judo, archery, tennis and more.</li>
+        </ul>
+      </div>
+
+      <div class="lc note-card">
+        <h2>Staying safe while you move</h2>
+        <ul>
+          <li>Start gently and build up — there's no rush.</li>
+          <li>Choose familiar spaces and clear the floor of trip hazards.</li>
+          <li>Tell someone when you head out, or exercise with a buddy.</li>
+          <li>If something hurts beyond normal effort, stop and check with a professional.</li>
+        </ul>
+      </div>
+
+      <div class="lc learnmore">
+        <h2>More in-depth information</h2>
+        <ul>
+          <li><a href="https://britishblindsport.org.uk/activity-finder/" rel="noopener noreferrer" aria-label="British Blind Sport Activity Finder (opens external site)">British Blind Sport — Activity Finder &#8599;</a> — find VI-inclusive clubs and sessions near you.</li>
+          <li><a href="https://britishblindsport.org.uk" rel="noopener noreferrer" aria-label="British Blind Sport (opens external site)">British Blind Sport — home &#8599;</a> — the national sports charity for sight loss.</li>
+          <li><a href="https://www.nhs.uk/live-well/exercise/" rel="noopener noreferrer" aria-label="NHS Live Well exercise (opens external site)">NHS — getting active &#8599;</a> — guidance and simple ideas.</li>
+        </ul>
+      </div>
+
+      <button class="back-btn" onclick="goHome()" style="margin-top:8px"><span aria-hidden="true">←</span> Back to home</button>
+    </div>
+  </section>
+
+  <!-- ════════════════ EATING WELL ════════════════ -->
+  <section id="page-eating" class="page" aria-labelledby="eating-h">
+    <div class="legal-wrap">
+      <button class="back-btn" onclick="goHome()"><span aria-hidden="true">←</span> Back to home</button>
+      <span class="section-eyebrow">Eat well</span>
+      <h1 id="eating-h" tabindex="-1">🥗 Eating well</h1>
+
+      <div class="lc">
+        <h2>Balance, not counting</h2>
+        <p>You don't need to track calories. The NHS Eatwell Guide keeps it simple: plenty of
+          vegetables and fruit, some wholegrains, some protein (beans, fish, eggs, meat), a little
+          dairy or alternatives, and not too much sugar, salt or fat.</p>
+      </div>
+
+      <div class="lc">
+        <h2>An accessible kitchen</h2>
+        <ul>
+          <li><strong>Contrast helps:</strong> a dark board for light food and a light board for
+            dark food makes things easier to see.</li>
+          <li><strong>Talking and tactile tools:</strong> talking scales, jug-level indicators and
+            talking thermometers take the guesswork out of cooking.</li>
+          <li><strong>A place for everything:</strong> organising cupboards and the fridge the same
+            way every time saves time and frustration.</li>
+          <li><strong>Labelling:</strong> bump-on stickers or a label reader tell tins and packets apart.</li>
+          <li><strong>Reading labels:</strong> a phone app with a screen reader can read out
+            ingredients and nutrition information from packaging.</li>
+        </ul>
+      </div>
+
+      <div class="lc note-card">
+        <h2>Simple, nourishing meals</h2>
+        <p>You don't need complicated recipes. One-pot meals, batch cooking, and assembling rather
+          than cooking — wholemeal toast with beans, or yoghurt with fruit and oats — all make
+          balanced eating straightforward.</p>
+      </div>
+
+      <div class="lc learnmore">
+        <h2>More in-depth information</h2>
+        <ul>
+          <li><a href="https://www.nhs.uk/live-well/eat-well/" rel="noopener noreferrer" aria-label="NHS Eatwell Guide (opens external site)">NHS — the Eatwell Guide &#8599;</a> — what balanced eating looks like.</li>
+          <li><a href="https://shop.rnib.org.uk" rel="noopener noreferrer" aria-label="RNIB Shop (opens external site)">RNIB Shop &#8599;</a> — talking scales, liquid level indicators and kitchen aids.</li>
+        </ul>
+      </div>
+
+      <button class="back-btn" onclick="goHome()" style="margin-top:8px"><span aria-hidden="true">←</span> Back to home</button>
+    </div>
+  </section>
+
+  <!-- ════════════════ SLEEP ════════════════ -->
+  <section id="page-sleep" class="page" aria-labelledby="sleep-h">
+    <div class="legal-wrap">
+      <button class="back-btn" onclick="goHome()"><span aria-hidden="true">←</span> Back to home</button>
+      <span class="section-eyebrow">Rest well</span>
+      <h1 id="sleep-h" tabindex="-1">😴 Sleep</h1>
+
+      <div class="lc">
+        <h2>Sleeping better</h2>
+        <ul>
+          <li>Keep regular times for going to bed and getting up.</li>
+          <li>Wind down before bed — gentle routine, calm sounds, less screen time.</li>
+          <li>Go easy on caffeine and big meals late in the day.</li>
+          <li>Keep the bedroom cool, quiet and comfortable.</li>
+        </ul>
+      </div>
+
+      <div class="lc note-card">
+        <h2>Sight loss and your body clock</h2>
+        <p>Our body clock is partly set by light. Some people with little or no light perception
+          find their sleep pattern drifts later each day — sometimes called Non-24-Hour Sleep-Wake
+          Disorder. If your sleep feels out of step with the world around you, it's worth talking to
+          your GP, as there are treatments that can help.</p>
+      </div>
+
+      <div class="lc learnmore">
+        <h2>More in-depth information</h2>
+        <ul>
+          <li><a href="https://www.nhs.uk/live-well/sleep-and-tiredness/" rel="noopener noreferrer" aria-label="NHS Sleep and Tiredness (opens external site)">NHS — Sleep and tiredness &#8599;</a> — practical guidance on sleeping well.</li>
+        </ul>
+      </div>
+
+      <button class="back-btn" onclick="goHome()" style="margin-top:8px"><span aria-hidden="true">←</span> Back to home</button>
+    </div>
+  </section>
+
+  <!-- ════════════════ STRESS & MIND ════════════════ -->
+  <section id="page-stress" class="page" aria-labelledby="stress-h">
+    <div class="legal-wrap">
+      <button class="back-btn" onclick="goHome()"><span aria-hidden="true">←</span> Back to home</button>
+      <span class="section-eyebrow">Mind &amp; mood</span>
+      <h1 id="stress-h" tabindex="-1">🧠 Stress &amp; mind</h1>
+
+      <div class="lc">
+        <h2>Your wellbeing matters</h2>
+        <p>Living with sight loss can bring frustration, worry or low mood at times — that's a very
+          human response, and you don't have to manage it alone. Small, steady habits help: keeping a
+          routine, staying connected with people, getting outside, and being kind to yourself.</p>
+      </div>
+
+      <div class="lc">
+        <h2>Things that can ease stress</h2>
+        <ul>
+          <li>Slow breathing — a few minutes of longer, gentle out-breaths.</li>
+          <li>Gentle activity and time outdoors.</li>
+          <li>Talking to someone you trust, or a peer support group.</li>
+          <li>Breaking tasks into small steps so they feel manageable.</li>
+        </ul>
+      </div>
+
+      <div class="lc note-card">
+        <h2>Getting support</h2>
+        <p>If low mood, anxiety or stress is affecting your daily life, please reach out. Your GP
+          can talk through options, including NHS talking therapies. The <strong>RNIB Helpline</strong>
+          also offers emotional support and someone who understands.</p>
+        <p><strong>RNIB Helpline:</strong> <a href="tel:03031239999">0303 123 9999</a> — Mon–Fri 8am–8pm, Sat 9am–1pm.</p>
+      </div>
+
+      <div class="lc learnmore">
+        <h2>More in-depth information</h2>
+        <ul>
+          <li><a href="https://www.nhs.uk/every-mind-matters/" rel="noopener noreferrer" aria-label="NHS Every Mind Matters (opens external site)">NHS — Every Mind Matters &#8599;</a> — practical tips for stress, anxiety and low mood.</li>
+          <li><a href="https://www.rnib.org.uk" rel="noopener noreferrer" aria-label="RNIB (opens external site)">RNIB — emotional support &#8599;</a> — help adjusting to sight loss.</li>
+        </ul>
+      </div>
+
+      <button class="back-btn" onclick="goHome()" style="margin-top:8px"><span aria-hidden="true">←</span> Back to home</button>
+    </div>
+  </section>
+
+  <!-- ════════════════ USEFUL ORGANISATIONS ════════════════ -->
+  <section id="page-help" class="page" aria-labelledby="help-h">
+    <div class="legal-wrap">
+      <button class="back-btn" onclick="goHome()"><span aria-hidden="true">←</span> Back to home</button>
+      <span class="section-eyebrow">Support</span>
+      <h1 id="help-h" tabindex="-1">📞 Useful organisations</h1>
+
+      <div class="lc">
+        <h2>National support &amp; activity</h2>
+        <ul>
+          <li><a href="https://www.rnib.org.uk" rel="noopener noreferrer" aria-label="RNIB (opens external site)">RNIB &#8599;</a> — the UK's leading sight loss charity. Helpline <a href="tel:03031239999">0303 123 9999</a>.</li>
+          <li><a href="https://britishblindsport.org.uk" rel="noopener noreferrer" aria-label="British Blind Sport (opens external site)">British Blind Sport &#8599;</a> — sport and activity for blind and partially sighted people.</li>
+          <li><a href="https://www.guidedogs.org.uk" rel="noopener noreferrer" aria-label="Guide Dogs (opens external site)">Guide Dogs &#8599;</a> — mobility, support and services.</li>
+          <li><a href="https://www.macularsociety.org" rel="noopener noreferrer" aria-label="Macular Society (opens external site)">Macular Society &#8599;</a> — for macular conditions.</li>
+          <li><a href="https://glaucoma.uk" rel="noopener noreferrer" aria-label="Glaucoma UK (opens external site)">Glaucoma UK &#8599;</a> — for glaucoma.</li>
+          <li><a href="https://retinauk.org.uk" rel="noopener noreferrer" aria-label="Retina UK (opens external site)">Retina UK &#8599;</a> — for inherited sight loss.</li>
+        </ul>
+      </div>
+
+      <div class="lc">
+        <h2>Learning &amp; everyday living</h2>
+        <ul>
+          <li><a href="https://www.henshaws.org.uk/knowledge-village/" rel="noopener noreferrer" aria-label="Henshaws Knowledge Village (opens external site)">Henshaws Knowledge Village &#8599;</a> — free video guides for using technology with sight loss.</li>
+          <li><a href="https://shop.rnib.org.uk" rel="noopener noreferrer" aria-label="RNIB Shop (opens external site)">RNIB Shop &#8599;</a> — talking and tactile gadgets for the home.</li>
+          <li><a href="https://www.nhs.uk/live-well/" rel="noopener noreferrer" aria-label="NHS Live Well (opens external site)">NHS Live Well &#8599;</a> — health and wellbeing advice.</li>
+        </ul>
+        <!-- EDIT: add your own local sight loss society and other links here. -->
+      </div>
+
+      <button class="back-btn" onclick="goHome()" style="margin-top:8px"><span aria-hidden="true">←</span> Back to home</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="footer-inner">
+    <!-- EDIT: footer site name -->
+    <div class="footer-logo">◈ Sight Well UK</div>
+    <p class="footer-desc">A free, independent UK resource on whole-health for people who are blind
+      or partially sighted. A sister site to Sight Atlas UK.</p>
+
+    <nav aria-label="Topics and links">
+      <div class="footer-links">
+        <button onclick="showPage('active')">Getting active</button>
+        <button onclick="showPage('eating')">Eating well</button>
+        <button onclick="showPage('sleep')">Sleep</button>
+        <button onclick="showPage('stress')">Stress &amp; mind</button>
+        <button onclick="showPage('help')">Organisations</button>
+        <a href="https://www.rnib.org.uk" rel="noopener noreferrer" aria-label="RNIB (opens external site)">RNIB</a>
+        <a href="https://britishblindsport.org.uk" rel="noopener noreferrer" aria-label="British Blind Sport (opens external site)">British Blind Sport</a>
+        <a href="https://www.nhs.uk/live-well/" rel="noopener noreferrer" aria-label="NHS Live Well (opens external site)">NHS Live Well</a>
+      </div>
+    </nav>
+
+    <div class="footer-bottom">
+      <!-- EDIT the year/date as needed. -->
+      © 2026 Sight Well UK &nbsp;·&nbsp; <strong>Not a medical provider</strong> &nbsp;·&nbsp;
+      Information is for general guidance only — always consult your GP or a qualified professional &nbsp;·&nbsp;
+      <!-- ACCESSIBILITY: not tested yet. After Lighthouse/WAVE/JAWS, replace with your verified wording. -->
+      Built to aim for WCAG 2.2 AA (testing pending) &nbsp;·&nbsp;
+      Last updated: [add date].
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="back-top" onclick="scrollTopBtn()" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
+
+<script>
+(function(){
+  var SIZE_IDS = { '1':'sz-s', '1.35':'sz-m', '1.7':'sz-l', '2.2':'sz-xl' };
+  var PAGES = ['home','active','eating','sleep','stress','help'];
+
+  /* ── PAGE NAVIGATION ── */
+  window.showPage = function(name, fromHash){
+    if(PAGES.indexOf(name) === -1) name = 'home';
+    if(window.stopSpeech) window.stopSpeech();
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    var el = document.getElementById('page-' + name);
+    if(el){ el.classList.add('active'); }
+    window.scrollTo({ top:0, behavior:'auto' });
+    if(!fromHash){ try{ location.hash = (name === 'home') ? '' : name; }catch(e){} }
+    /* Move focus to the page heading so screen-reader users hear the new page */
+    var h = el ? el.querySelector('h1') : null;
+    if(h){ h.focus(); }
+  };
+  window.goHome = function(){ showPage('home'); };
+
+  /* Open the right page on load + when the browser back/forward is used */
+  function syncFromHash(){
+    var h = (location.hash || '').replace('#','');
+    showPage(PAGES.indexOf(h) !== -1 ? h : 'home', true);
+  }
+  window.addEventListener('hashchange', syncFromHash);
+
+  /* ── TEXT SIZE ── */
+  window.setSize = function(scale){
+    document.documentElement.style.setProperty('--scale', scale);
+    try{ localStorage.setItem('sw-size', scale); }catch(e){}
+    Object.entries(SIZE_IDS).forEach(function(pair){
+      var b = document.getElementById(pair[1]); if(!b) return;
+      b.setAttribute('aria-pressed', String(Math.abs(parseFloat(pair[0]) - scale) < 0.01));
+    });
+  };
+
+  /* ── COLOUR THEME ── */
+  window.setColour = function(mode){
+    document.body.classList.remove('dark','ll','hc','yb','lb');
+    if(mode) document.body.classList.add(mode);
+    try{ localStorage.setItem('sw-colour', mode); }catch(e){}
+    var sel = document.getElementById('col-select'); if(sel) sel.value = mode || '';
+  };
+
+  /* ── READING AIDS ── */
+  window.toggleDyslexic = function(){
+    var on = document.body.classList.toggle('dyslexic');
+    try{ localStorage.setItem('sw-dys', on?'1':'0'); }catch(e){}
+    var b = document.getElementById('dys-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
+  };
+  window.toggleSpacing = function(){
+    var on = document.body.classList.toggle('wide-spacing');
+    try{ localStorage.setItem('sw-spacing', on?'1':'0'); }catch(e){}
+    var b = document.getElementById('spacing-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
+  };
+  window.toggleReadingRuler = function(){
+    var on = document.body.classList.toggle('reading-ruler');
+    try{ localStorage.setItem('sw-rule', on?'1':'0'); }catch(e){}
+    var b = document.getElementById('rule-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
+  };
+  document.addEventListener('mousemove', function(e){
+    if(!document.body.classList.contains('reading-ruler')) return;
+    var bar = document.querySelector('.reading-ruler-bar'); if(bar) bar.style.top = (e.clientY - 24) + 'px';
+  });
+
+  /* ── BACK TO TOP ── */
+  window.scrollTopBtn = function(){ window.scrollTo({ top:0, behavior:'smooth' }); };
+  var bt = document.getElementById('back-top');
+  window.addEventListener('scroll', function(){ if(bt) bt.classList.toggle('vis', window.scrollY > 400); });
+
+  /* ── TEXT TO SPEECH ("Listen") ── */
+  var synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+  var activeBtn = null;
+
+  function setBtnLabel(btn, txt){
+    if(!btn) return;
+    if(btn.id === 'tts-toggle'){ var l = document.getElementById('tts-label'); if(l) l.textContent = txt; }
+    else { var t = btn.querySelector('.li-text'); if(t) t.textContent = txt; }
+  }
+  function resetListen(btn){ if(btn){ btn.setAttribute('aria-pressed','false'); setBtnLabel(btn,'Listen'); } }
+
+  window.stopSpeech = function(){
+    if(synth) synth.cancel();
+    document.querySelectorAll('.lc-listen, #tts-toggle').forEach(resetListen);
+    activeBtn = null;
+  };
+
+  function speak(text, btn){
+    if(!synth){ alert('Sorry — your browser does not support reading text aloud.'); return; }
+    if(btn && btn === activeBtn){ window.stopSpeech(); return; }  /* tap again = stop */
+    window.stopSpeech();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB'; u.rate = 1; u.pitch = 1;
+    u.onend = function(){ resetListen(btn); if(activeBtn === btn) activeBtn = null; };
+    u.onerror = function(){ resetListen(btn); if(activeBtn === btn) activeBtn = null; };
+    activeBtn = btn || null;
+    if(btn){ btn.setAttribute('aria-pressed','true'); setBtnLabel(btn,'Stop'); }
+    synth.speak(u);
+  }
+
+  function readText(node){
+    var clone = node.cloneNode(true);
+    clone.querySelectorAll('.lc-listen, .back-btn').forEach(function(n){ n.remove(); });
+    return clone.textContent.replace(/\s+/g,' ').trim();
+  }
+
+  /* Toolbar button: read the whole current page */
+  window.togglePageSpeech = function(){
+    var btn = document.getElementById('tts-toggle');
+    if(btn && btn === activeBtn){ window.stopSpeech(); return; }
+    var active = document.querySelector('.page.active');
+    if(active) speak(readText(active), btn);
+  };
+
+  /* Give every card its own Listen button */
+  document.querySelectorAll('.lc').forEach(function(card){
+    if(card.querySelector('.lc-listen')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'lc-listen';
+    btn.setAttribute('aria-pressed','false');
+    btn.setAttribute('aria-label','Listen to this section');
+    btn.innerHTML = '<span class="li-icon" aria-hidden="true">🔊</span><span class="li-text">Listen</span>';
+    btn.addEventListener('click', function(){ speak(readText(card), btn); });
+    card.appendChild(btn);
+  });
+
+  /* Stop audio if the page is hidden */
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) window.stopSpeech(); });
+
+  /* ── RESTORE SAVED PREFERENCES (guarded) ── */
+  try{
+    var s = localStorage.getItem('sw-size'); if(s) setSize(parseFloat(s));
+    var c = localStorage.getItem('sw-colour'); if(c) setColour(c);
+    if(localStorage.getItem('sw-dys')==='1') toggleDyslexic();
+    if(localStorage.getItem('sw-spacing')==='1') toggleSpacing();
+    if(localStorage.getItem('sw-rule')==='1') toggleReadingRuler();
+  }catch(e){}
+
+  /* Open correct page on first load */
+  syncFromHash();
+})();
+</script>
+</body>
+</html>
