@@ -257,8 +257,9 @@ body.dyslexic, body.dyslexic *{ letter-spacing:0.03em; word-spacing:0.08em; line
 body.wide-spacing, body.wide-spacing *{ letter-spacing:0.06em !important; word-spacing:0.12em !important; line-height:2.1 !important; }
 .reading-ruler-bar{ position:fixed; left:0; right:0; top:0; height:54px; background:rgba(10,97,87,0.16);
   border-top:2px solid var(--yellow); border-bottom:2px solid var(--yellow); z-index:99998;
-  display:none; transform:translateY(-100px); will-change:transform; pointer-events:none; }
-.reading-ruler-bar.dragging{ background:rgba(10,97,87,0.26); }
+  display:none; transform:translateY(-100px); will-change:transform;
+  pointer-events:auto; touch-action:none; cursor:grab; }
+.reading-ruler-bar.dragging{ background:rgba(10,97,87,0.28); cursor:grabbing; }
 body.reading-ruler .reading-ruler-bar{ display:block; }
 
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
@@ -762,35 +763,33 @@ body.reading-ruler .reading-ruler-bar{ display:block; }
   window.toggleReadingRuler = function(){
     var on = document.body.classList.toggle('reading-ruler');
     try{ localStorage.setItem('sw-rule', on?'1':'0'); }catch(e){}
-    if(on){ _rulerY = null; moveRuler(27); }   /* start at the very top, over the toolbar */
+    if(on){
+      var tb = document.querySelector('.a11y-bar-outer');
+      var b = tb ? tb.getBoundingClientRect().bottom : 120;
+      _rulerY = null;
+      moveRuler(Math.max(96, b) + 30);   /* start just below the controls */
+    }
     var b = document.getElementById('rule-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
   };
 
-  /* The band is click-through (pointer-events:none) so it can sit over the
-     toolbar without blocking it. To move it, touch the band and drag — page
-     scroll is locked only during that drag, so it tracks the finger smoothly. */
+  /* The band owns its own touches (touch-action:none), so starting a drag on
+     it never gets stolen by the page scroll. Drag it up or down to move it. */
   (function(){
     var bar = document.querySelector('.reading-ruler-bar');
     if(!bar) return;
     var dragging = false;
-    function onBand(y){ if(_rulerY == null) return false; return y >= (_rulerY - 32) && y <= (_rulerY + 32); }
-    document.addEventListener('touchstart', function(e){
-      if(!document.body.classList.contains('reading-ruler')) return;
-      if(e.touches && e.touches.length === 1 && onBand(e.touches[0].clientY)){
-        dragging = true; bar.classList.add('dragging');
-        if(e.cancelable) e.preventDefault();
-      }
-    }, {passive:false});
+    bar.addEventListener('touchstart', function(){ dragging = true; bar.classList.add('dragging'); }, {passive:true});
+    bar.addEventListener('mousedown', function(e){ dragging = true; bar.classList.add('dragging'); e.preventDefault(); });
     document.addEventListener('touchmove', function(e){
       if(!dragging) return;
       if(e.touches && e.touches.length) moveRuler(e.touches[0].clientY);
       if(e.cancelable) e.preventDefault();
     }, {passive:false});
-    function end(){ dragging = false; bar.classList.remove('dragging'); }
+    document.addEventListener('mousemove', function(e){ if(dragging) moveRuler(e.clientY); });
+    function end(){ if(dragging){ dragging = false; bar.classList.remove('dragging'); } }
     document.addEventListener('touchend', end);
     document.addEventListener('touchcancel', end);
-    /* Desktop: the ruler follows the mouse. */
-    document.addEventListener('mousemove', function(e){ moveRuler(e.clientY); });
+    document.addEventListener('mouseup', end);
   })();
 
   /* ── BACK TO TOP ── */
