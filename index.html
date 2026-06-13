@@ -31,41 +31,42 @@
 <style>
 /* ════════ DESIGN TOKENS — LIGHT DEFAULT (matches Sight Atlas) ════════ */
 :root{
-  scroll-padding-top: 124px;
-  --bg:#eef5f1; --bg2:#e2ede7; --card:#ffffff; --card2:#f4f9f6;
-  --yellow:#0a6157; --yellow2:#0d7567;
-  --btn-bg:#0a6157; --btn-fg:#ffffff;   /* filled-button bg + its text (always contrasts) */
-  --text:#15241d; --text2:#44564e; --border:rgba(0,0,0,0.45);
-  --green:#0a6157; --blue:#1a6fa8; --red:#dc2626;
-  --shadow:0 4px 16px rgba(15,40,30,0.08);
+  scroll-padding-top: 72px;
+  --bg:#f6f3ec; --bg2:#ece6da; --card:#ffffff; --card2:#faf7f0;
+  --yellow:#0b6e5b; --yellow2:#0e8a72;
+  --btn-bg:#0b6e5b; --btn-fg:#ffffff;        /* filled-button bg + its text (always contrasts) */
+  --pop:#c2410c; --pop2:#ea580c;             /* vibrant orange second accent */
+  --text:#191919; --text2:#474747; --border:rgba(0,0,0,0.55);
+  --green:#0b6e5b; --blue:#1a6fa8; --red:#dc2626;
+  --shadow:0 6px 18px rgba(40,30,15,0.12);
   --font:'Atkinson Hyperlegible', sans-serif;
   --scale:1;
 }
 body.dark{
   --bg:#0d1714; --bg2:#13201c; --card:#1a2b25; --card2:#21342d;
-  --text:#ffffff; --text2:#cfdbd5; --border:rgba(255,255,255,0.40);
+  --text:#ffffff; --text2:#cfdbd5; --border:rgba(255,255,255,0.42);
   --yellow:#34d399; --yellow2:#5ee0ad; --green:#34d399; --blue:#38bdf8; --red:#f87171;
-  --btn-bg:#34d399; --btn-fg:#04231b;
+  --btn-bg:#34d399; --btn-fg:#04231b; --pop:#fb923c; --pop2:#fb923c;
   --shadow:0 2px 12px rgba(0,0,0,0.35);
 }
 body.ll{
   --bg:#2b1f15; --bg2:#3a2a1c; --card:#3d2d20; --card2:#4a3729;
   --text:#f4e4cc; --text2:#d4b896; --border:rgba(244,228,204,0.48);
   --yellow:#ffb84d; --yellow2:#ffc466; --green:#7dbf85; --blue:#7eb8d0; --red:#e89090;
-  --btn-bg:#ffb84d; --btn-fg:#000000;
+  --btn-bg:#ffb84d; --btn-fg:#000000; --pop:#ffb84d; --pop2:#ffb84d;
   --shadow:0 2px 12px rgba(0,0,0,0.4);
 }
 body.hc{
   --bg:#000; --bg2:#0a0a0a; --card:#0a0a0a; --card2:#141414;
-  --text:#fff; --text2:#ddd; --border:#fff; --yellow:#fff; --yellow2:#ddd; --btn-bg:#ffffff; --btn-fg:#000000; --shadow:none;
+  --text:#fff; --text2:#ddd; --border:#fff; --yellow:#fff; --yellow2:#ddd; --btn-bg:#ffffff; --btn-fg:#000000; --pop:#ffffff; --pop2:#ffffff; --shadow:none;
 }
 body.yb{
   --bg:#fcd901; --bg2:#fcd901; --card:#fcd901; --card2:#fcd901;
-  --text:#000; --text2:#1a1a1a; --border:#000; --yellow:#000; --yellow2:#1a1a1a; --btn-bg:#000000; --btn-fg:#fcd901; --shadow:none;
+  --text:#000; --text2:#1a1a1a; --border:#000; --yellow:#000; --yellow2:#1a1a1a; --btn-bg:#000000; --btn-fg:#fcd901; --pop:#000000; --pop2:#000000; --shadow:none;
 }
 body.lb{
   --bg:#cce8f4; --bg2:#bfe0f0; --card:#e6f4fb; --card2:#d6ecf7;
-  --text:#000; --text2:#16204a; --border:#003a80; --yellow:#003a80; --yellow2:#00529b; --btn-bg:#003a80; --btn-fg:#ffffff; --shadow:none;
+  --text:#000; --text2:#16204a; --border:#003a80; --yellow:#003a80; --yellow2:#00529b; --btn-bg:#003a80; --btn-fg:#ffffff; --pop:#003a80; --pop2:#003a80; --shadow:none;
 }
 
 /* ════════ BASE ════════ */
@@ -89,7 +90,19 @@ body.hc a:focus-visible, body.hc button:focus-visible, body.hc select:focus-visi
   overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
 /* ════════ ACCESSIBILITY TOOLBAR ════════ */
-.a11y-bar-outer{ position:sticky; top:0; z-index:200; border-bottom:3px solid var(--yellow); }
+.a11y-bar-outer{ position:relative; z-index:200; border-bottom:3px solid var(--yellow); }
+
+/* Slim nav bar that slides in once you scroll (Back/Home, or Top on home) */
+.stickynav{ position:fixed; top:0; left:0; right:0; z-index:9000; background:var(--bg2);
+  border-bottom:3px solid var(--yellow); padding:8px 12px; display:flex; align-items:center;
+  justify-content:space-between; gap:10px; transform:translateY(-110%); transition:transform .2s ease; }
+.stickynav.vis{ transform:translateY(0); }
+.sn-btn{ font-family:var(--font); font-weight:800; font-size:0.98rem; min-height:48px; padding:0 20px;
+  border-radius:50px; border:2px solid var(--border); background:var(--card); color:var(--yellow);
+  cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+.sn-btn.solid{ background:var(--btn-bg); color:var(--btn-fg); border-color:var(--btn-bg); }
+.sn-btn[hidden]{ display:none; }
+@media (prefers-reduced-motion: reduce){ .stickynav{ transition:none; } }
 .a11y-bar{ background:var(--bg2); padding:6px 8px; display:flex; align-items:center;
   justify-content:center; gap:5px; flex-wrap:wrap; row-gap:5px; min-height:50px; }
 .a11y-bar-row2{ padding-top:0; min-height:0; padding-bottom:8px; }
@@ -124,13 +137,13 @@ body.hc a:focus-visible, body.hc button:focus-visible, body.hc select:focus-visi
 
 /* ════════ HERO (home) ════════ */
 .hero{ padding:36px 20px 28px; max-width:min(680px,100%); margin:0 auto; width:100%; }
-.hero-eyebrow{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.14em;
-  color:var(--yellow); margin-bottom:14px; display:block; }
-.hero h1{ font-size:clamp(1.5rem,5vw,2.4rem); font-weight:900; line-height:1.15; margin-bottom:14px; color:var(--text); }
+.hero-eyebrow{ font-size:0.8rem; font-weight:900; text-transform:uppercase; letter-spacing:0.16em;
+  color:var(--pop); margin-bottom:14px; display:block; }
+.hero h1{ font-size:clamp(1.6rem,5.4vw,2.6rem); font-weight:900; line-height:1.12; margin-bottom:14px; color:var(--text); }
 .hero-desc{ font-size:1.05rem; color:var(--text2); margin-bottom:22px; line-height:1.8; }
-.wordmark{ font-size:min(2.2rem,14vw); font-weight:800; color:var(--text); letter-spacing:-0.025em;
+.wordmark{ font-size:min(2.3rem,14vw); font-weight:800; color:var(--text); letter-spacing:-0.025em;
   line-height:1.05; margin-bottom:8px; }
-.wordmark .accent{ color:var(--yellow); font-weight:900; }
+.wordmark .accent{ color:var(--pop); font-weight:900; }
 .wordmark .uk{ font-size:min(1rem,5vw); font-weight:700; color:var(--text2); letter-spacing:0.08em; margin-left:6px; vertical-align:middle; }
 .flagline{ display:inline-flex; align-items:center; gap:10px; margin-top:4px; }
 .flagline .bar{ display:inline-block; width:28px; height:3px; border-radius:2px; }
@@ -139,18 +152,18 @@ body.hc a:focus-visible, body.hc button:focus-visible, body.hc select:focus-visi
 /* Topic navigation buttons on the home page */
 .topic-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:8px; }
 @media (min-width:520px){ .topic-grid{ grid-template-columns:1fr 1fr; } }
-.topic-btn{ display:flex; align-items:center; gap:14px; width:100%; text-align:left;
+.topic-btn{ display:flex; align-items:flex-start; gap:14px; width:100%; text-align:left;
   background:var(--card); border:2px solid var(--border); border-radius:16px; padding:18px 20px;
   font-family:var(--font); color:var(--text); cursor:pointer; box-shadow:var(--shadow);
   min-height:64px; transition:border-color .15s,transform .15s; }
 .topic-btn:hover{ border-color:var(--yellow); transform:translateY(-2px); }
-.topic-btn .t-icon{ font-size:1.5rem; line-height:1; flex-shrink:0; width:54px; height:54px;
+.topic-btn .t-icon{ font-size:28px; line-height:1; flex-shrink:0; width:54px; height:54px;
   display:inline-flex; align-items:center; justify-content:center; border-radius:15px;
-  background:var(--card2); border:1.5px solid var(--border); }
-.topic-btn .t-text{ display:flex; flex-direction:column; }
-.topic-btn .t-title{ font-weight:900; font-size:1.1rem; color:var(--text); }
-.topic-btn .t-sub{ font-size:0.85rem; color:var(--text2); font-weight:600; }
-.topic-btn .t-arrow{ margin-left:auto; color:var(--yellow); font-weight:900; font-size:1.2rem; }
+  background:var(--card2); border:2px solid var(--pop); }
+.topic-btn .t-text{ display:flex; flex-direction:column; min-width:0; flex:1; }
+.topic-btn .t-title{ font-weight:900; font-size:1.1rem; color:var(--text); overflow-wrap:break-word; word-break:break-word; }
+.topic-btn .t-sub{ font-size:0.85rem; color:var(--text2); font-weight:600; overflow-wrap:break-word; word-break:break-word; }
+.topic-btn .t-arrow{ flex-shrink:0; color:var(--yellow); font-weight:900; font-size:1.2rem; }
 
 /* ════════ TOPIC PAGES ════════ */
 .legal-wrap{ max-width:680px; margin:0 auto; padding:28px 20px 40px; }
@@ -158,8 +171,8 @@ body.hc a:focus-visible, body.hc button:focus-visible, body.hc select:focus-visi
   color:var(--yellow); padding:10px 24px; border-radius:50px; font-family:var(--font); font-size:0.9rem;
   font-weight:700; cursor:pointer; min-height:44px; margin-bottom:24px; transition:border-color .15s; }
 .back-btn:hover{ border-color:var(--yellow); }
-.section-eyebrow{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.14em;
-  color:var(--yellow); margin-bottom:10px; display:block; }
+.section-eyebrow{ font-size:0.74rem; font-weight:900; text-transform:uppercase; letter-spacing:0.15em;
+  color:var(--pop); margin-bottom:10px; display:block; }
 .legal-wrap h1{ font-size:clamp(1.7rem,6vw,2.4rem); font-weight:900; line-height:1.12; margin-bottom:18px; color:var(--text); outline:none; }
 .lc{ background:var(--card); border:2px solid var(--border); border-radius:16px; padding:22px 24px;
   margin-bottom:14px; box-shadow:var(--shadow); }
@@ -237,19 +250,15 @@ footer{ background:var(--bg2); border-top:3px solid var(--yellow); padding:36px 
 .footer-bottom{ font-size:0.78rem; color:var(--text2); border-top:1px solid var(--border); padding-top:18px; line-height:1.8; }
 
 /* ════════ BACK TO TOP ════════ */
-.back-top{ position:fixed; bottom:24px; right:20px; z-index:300; width:56px; height:56px; border-radius:50%;
-  background:var(--btn-bg); color:var(--btn-fg); border:none; font-size:1.4rem; font-weight:900; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,0.28);
-  opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; transform:translateY(8px); }
-.back-top.vis{ opacity:1; pointer-events:auto; transform:translateY(0); }
-.back-top:focus-visible{ outline:3px solid var(--text); outline-offset:3px; }
+
 
 /* ════════ READING AIDS ════════ */
 body.dyslexic, body.dyslexic *{ letter-spacing:0.03em; word-spacing:0.08em; line-height:1.7 !important; }
 body.wide-spacing, body.wide-spacing *{ letter-spacing:0.06em !important; word-spacing:0.12em !important; line-height:2.1 !important; }
-@media (hover:hover){ body.reading-ruler{ cursor:none; } }
-.reading-ruler-bar{ position:fixed; left:0; right:0; height:48px; background:rgba(10,97,87,0.14);
-  border-top:2px solid var(--yellow); border-bottom:2px solid var(--yellow); pointer-events:none; z-index:99998; display:none; }
+.reading-ruler-bar{ position:fixed; left:0; right:0; top:0; height:54px; background:rgba(10,97,87,0.16);
+  border-top:2px solid var(--yellow); border-bottom:2px solid var(--yellow); z-index:99998;
+  display:none; transform:translateY(-100px); will-change:transform; pointer-events:none; }
+.reading-ruler-bar.dragging{ background:rgba(10,97,87,0.26); }
 body.reading-ruler .reading-ruler-bar{ display:block; }
 
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
@@ -312,7 +321,7 @@ body.reading-ruler .reading-ruler-bar{ display:block; }
             <line x1="196" y1="52" x2="176" y2="60"/>
           </g>
           <!-- rising sun (half disc on the horizon) -->
-          <path d="M82,86 a38,38 0 0 1 76,0 Z" fill="var(--yellow2)"/>
+          <path d="M82,86 a38,38 0 0 1 76,0 Z" fill="var(--pop2)"/>
           <!-- horizon -->
           <line x1="26" y1="86" x2="214" y2="86" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round"/>
           <!-- gentle foreground -->
@@ -622,7 +631,10 @@ body.reading-ruler .reading-ruler-bar{ display:block; }
   </div>
 </footer>
 
-<button class="back-top" id="back-top" onclick="scrollTopBtn()" aria-label="Back to top"><span aria-hidden="true">↑</span></button>
+<div id="stickynav" class="stickynav" aria-hidden="true">
+  <button class="sn-btn" id="sn-left" type="button"><span aria-hidden="true">←</span> Back</button>
+  <button class="sn-btn solid" id="sn-right" type="button"><span aria-hidden="true">🏠</span> Home</button>
+</div>
 
 <!-- ════════ READ ALOUD: floating status pill (while reading) ════════ -->
 <div id="tts-mini" class="tts-mini" role="status" aria-live="polite" hidden>
@@ -696,6 +708,7 @@ body.reading-ruler .reading-ruler-bar{ display:block; }
     /* Move focus to the page heading so screen-reader users hear the new page */
     var h = el ? el.querySelector('h1') : null;
     if(h){ h.focus(); }
+    if(window.updateStickyNav) window.updateStickyNav();
   };
   window.goHome = function(){ showPage('home'); };
 
@@ -735,29 +748,74 @@ body.reading-ruler .reading-ruler-bar{ display:block; }
     try{ localStorage.setItem('sw-spacing', on?'1':'0'); }catch(e){}
     var b = document.getElementById('spacing-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
   };
+  var _rulerBar = null, _rulerY = null, _rulerRAF = null;
+  function _rulerApply(){
+    _rulerRAF = null;
+    if(!_rulerBar) _rulerBar = document.querySelector('.reading-ruler-bar');
+    if(_rulerBar && _rulerY != null) _rulerBar.style.transform = 'translateY(' + (_rulerY - 27) + 'px)';
+  }
+  function moveRuler(y){
+    if(!document.body.classList.contains('reading-ruler')) return;
+    _rulerY = Math.max(27, Math.min(y, window.innerHeight - 27));
+    if(_rulerRAF == null) _rulerRAF = requestAnimationFrame(_rulerApply);
+  }
   window.toggleReadingRuler = function(){
     var on = document.body.classList.toggle('reading-ruler');
     try{ localStorage.setItem('sw-rule', on?'1':'0'); }catch(e){}
-    var bar = document.querySelector('.reading-ruler-bar');
-    if(on && bar){ bar.style.top = (window.innerHeight/2 - 24) + 'px'; }  /* start centred */
+    if(on){ _rulerY = null; moveRuler(27); }   /* start at the very top, over the toolbar */
     var b = document.getElementById('rule-toggle'); if(b){ b.setAttribute('aria-pressed', on?'true':'false'); b.blur(); }
   };
-  function moveRuler(y){
-    if(!document.body.classList.contains('reading-ruler')) return;
-    var bar = document.querySelector('.reading-ruler-bar'); if(bar) bar.style.top = (y - 24) + 'px';
-  }
-  document.addEventListener('mousemove', function(e){ moveRuler(e.clientY); });
-  document.addEventListener('touchmove', function(e){
-    if(e.touches && e.touches.length) moveRuler(e.touches[0].clientY);
-  }, {passive:true});
-  document.addEventListener('touchstart', function(e){
-    if(e.touches && e.touches.length) moveRuler(e.touches[0].clientY);
-  }, {passive:true});
+
+  /* The band is click-through (pointer-events:none) so it can sit over the
+     toolbar without blocking it. To move it, touch the band and drag — page
+     scroll is locked only during that drag, so it tracks the finger smoothly. */
+  (function(){
+    var bar = document.querySelector('.reading-ruler-bar');
+    if(!bar) return;
+    var dragging = false;
+    function onBand(y){ if(_rulerY == null) return false; return y >= (_rulerY - 32) && y <= (_rulerY + 32); }
+    document.addEventListener('touchstart', function(e){
+      if(!document.body.classList.contains('reading-ruler')) return;
+      if(e.touches && e.touches.length === 1 && onBand(e.touches[0].clientY)){
+        dragging = true; bar.classList.add('dragging');
+        if(e.cancelable) e.preventDefault();
+      }
+    }, {passive:false});
+    document.addEventListener('touchmove', function(e){
+      if(!dragging) return;
+      if(e.touches && e.touches.length) moveRuler(e.touches[0].clientY);
+      if(e.cancelable) e.preventDefault();
+    }, {passive:false});
+    function end(){ dragging = false; bar.classList.remove('dragging'); }
+    document.addEventListener('touchend', end);
+    document.addEventListener('touchcancel', end);
+    /* Desktop: the ruler follows the mouse. */
+    document.addEventListener('mousemove', function(e){ moveRuler(e.clientY); });
+  })();
 
   /* ── BACK TO TOP ── */
   window.scrollTopBtn = function(){ window.scrollTo({ top:0, behavior:'smooth' }); };
-  var bt = document.getElementById('back-top');
-  window.addEventListener('scroll', function(){ if(bt) bt.classList.toggle('vis', window.scrollY > 400); });
+
+  /* Slim nav bar: just a Back-to-top button, slides in on scroll */
+  function updateStickyNav(){
+    var left = document.getElementById('sn-left');
+    var right = document.getElementById('sn-right');
+    if(left){
+      left.innerHTML = '<span aria-hidden="true">↑</span> Top';
+      left.onclick = function(){ window.scrollTo({ top:0, behavior:'smooth' }); };
+    }
+    if(right) right.hidden = true;
+  }
+  window.updateStickyNav = updateStickyNav;
+
+  var _snBar = document.getElementById('stickynav');
+  window.addEventListener('scroll', function(){
+    if(!_snBar) return;
+    var on = window.scrollY > 160;
+    _snBar.classList.toggle('vis', on);
+    _snBar.setAttribute('aria-hidden', on ? 'false' : 'true');
+  });
+  updateStickyNav();
 
   /* ── READ ALOUD (Listen): panel + floating pill + highlighting ── */
   var synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
